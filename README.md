@@ -6,9 +6,9 @@ Use Docker Compose or the built in Render config for easy deployment.
 
 ## 2. Development Milestones
 
-v0.1 - `POST /overhead` with lat, long coords returns the nearest commercial flight flying overhead.
+v0.1 - `POST /overhead` with lat, long coords returns the nearest commercial flight flying overhead. ✅
 
-v0.1.5 - repository CI/CD and github container repository regristation. 
+v0.1.5 - repository CI/CD and github container repository regristation. ✅
 
 v0.2 - `POST /overhead` with amount returns a list of the nearest commercial flights up to the amount, clamped by configurable values.
 
