@@ -3,8 +3,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from flights_api.data.airlines import AirlineEntry
-from flights_api.models.overhead import OverheadResponse
+from overhead.data.airlines import AirlineEntry
+from overhead.models.overhead import OverheadResponse
 
 CALLSIGN_PATTERN = re.compile(r"^[A-Z]{3}\d+")
 STALE_POSITION_THRESHOLD_S = 60  # older position reports are likely a stale "ghost" hit, not the aircraft's current spot

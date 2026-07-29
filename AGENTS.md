@@ -2,7 +2,7 @@
 
 ## Project
 
-flights-api is a selfhostable FastAPI service that aggregates commercial flight
+overhead is a selfhostable FastAPI service that aggregates commercial flight
 data (ADS-B position/callsign, enriched with registration, airline, and
 route) for use across other projects, primarily FlightMatrix. See README.md
 for the milestone roadmap and data source table — keep that file, and this one, in sync when

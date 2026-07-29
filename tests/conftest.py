@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-import flights_api.cache as cache_module
+import overhead.cache as cache_module
 
 
 @pytest.fixture(autouse=True)

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flights_api.config import load_config
+from overhead.config import load_config
 
 
 def test_load_config_returns_defaults_when_file_missing(tmp_path: Path) -> None:

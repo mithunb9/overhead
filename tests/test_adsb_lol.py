@@ -5,8 +5,8 @@ import httpx
 import pytest
 import redis
 
-from flights_api.clients.adsb_lol import fetch_nearby_aircraft
-from flights_api.config import settings
+from overhead.clients.adsb_lol import fetch_nearby_aircraft
+from overhead.config import settings
 
 
 @pytest.mark.anyio

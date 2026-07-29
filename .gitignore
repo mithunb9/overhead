@@ -217,5 +217,8 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# flights-api local config
+# overhead local config
 config.yaml
+
+# Claude Code local state
+.claude/

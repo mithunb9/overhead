@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: flights-api
+    name: overhead
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
@@ -8,10 +8,10 @@ services:
       - key: REDIS_URL
         fromService:
           type: keyvalue
-          name: flights-api-cache
+          name: overhead-cache
           property: connectionString
 
   - type: keyvalue
-    name: flights-api-cache
+    name: overhead-cache
     plan: free
     ipAllowList: []

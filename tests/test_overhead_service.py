@@ -1,4 +1,4 @@
-from flights_api.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest
+from overhead.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest
 
 GROUND_AC = {"flight": "UAL2681 ", "alt_baro": "ground", "seen_pos": 1.0, "dst": 1.0}
 GA_AC = {"flight": "N828KP  ", "alt_baro": 900, "seen_pos": 0.5, "dst": 2.0}

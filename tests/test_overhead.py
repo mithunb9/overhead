@@ -3,8 +3,8 @@ from unittest.mock import AsyncMock
 import pytest
 from fastapi.testclient import TestClient
 
-from flights_api.main import app
-from flights_api.models.overhead import OverheadResponse
+from overhead.main import app
+from overhead.models.overhead import OverheadResponse
 
 client = TestClient(app)
 
@@ -69,8 +69,8 @@ ROUTE_RESPONSE = {
 def mock_clients(monkeypatch: pytest.MonkeyPatch) -> tuple[AsyncMock, AsyncMock]:
     fetch_nearby = AsyncMock(return_value=[])
     fetch_route = AsyncMock(return_value=None)
-    monkeypatch.setattr("flights_api.api.routes.overhead.fetch_nearby_aircraft", fetch_nearby)
-    monkeypatch.setattr("flights_api.api.routes.overhead.fetch_flight_route", fetch_route)
+    monkeypatch.setattr("overhead.api.routes.overhead.fetch_nearby_aircraft", fetch_nearby)
+    monkeypatch.setattr("overhead.api.routes.overhead.fetch_flight_route", fetch_route)
     return fetch_nearby, fetch_route
 
 

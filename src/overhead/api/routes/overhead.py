@@ -1,12 +1,12 @@
 import httpx
 from fastapi import APIRouter
 
-from flights_api.clients.adsb_lol import fetch_nearby_aircraft
-from flights_api.clients.adsbdb import fetch_flight_route
-from flights_api.config import settings
-from flights_api.data.airlines import load_airlines
-from flights_api.models.overhead import OverheadRequest, OverheadResponse
-from flights_api.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest
+from overhead.clients.adsb_lol import fetch_nearby_aircraft
+from overhead.clients.adsbdb import fetch_flight_route
+from overhead.config import settings
+from overhead.data.airlines import load_airlines
+from overhead.models.overhead import OverheadRequest, OverheadResponse
+from overhead.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest
 
 router = APIRouter(prefix="/overhead", tags=["overhead"])
 
