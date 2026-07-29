@@ -19,6 +19,14 @@ def test_filter_commercial_airborne_handles_missing_flight_field() -> None:
     assert result == []
 
 
+def test_filter_commercial_airborne_keeps_position_exactly_at_staleness_threshold() -> None:
+    ac = {"flight": "AAL2847 ", "alt_baro": 32000, "seen_pos": 60, "dst": 1.0}
+
+    result = filter_commercial_airborne([ac])
+
+    assert result == [ac]
+
+
 def test_pick_nearest_returns_smallest_dst() -> None:
     assert pick_nearest([FAR_AC, NEAR_AC]) == NEAR_AC
 
@@ -71,3 +79,13 @@ def test_build_overhead_response_nulls_airline_when_unresolved() -> None:
     assert response.airline is None
     assert response.airline_icao is None
     assert response.flight == "AAL2847"
+
+
+def test_build_overhead_response_handles_missing_optional_adsb_lol_fields() -> None:
+    ac = {"flight": "AAL2847 ", "alt_baro": 32000, "seen_pos": 3, "dst": 3.65}
+
+    response = build_overhead_response(ac, route=None, airlines={})
+
+    assert response.reg is None
+    assert response.actype is None
+    assert response.speed_kt is None
