@@ -4,8 +4,8 @@ from typing import Any
 
 import httpx
 
-from flights_api.cache import cached_call
-from flights_api.config import settings
+from overhead.cache import cached_call
+from overhead.config import settings
 
 BASE_URL = "https://api.adsb.lol/v2"
 

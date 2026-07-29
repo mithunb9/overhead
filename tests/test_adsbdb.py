@@ -5,8 +5,8 @@ import httpx
 import pytest
 import redis
 
-from flights_api.clients.adsbdb import fetch_flight_route
-from flights_api.config import settings
+from overhead.clients.adsbdb import fetch_flight_route
+from overhead.config import settings
 
 
 @pytest.mark.anyio

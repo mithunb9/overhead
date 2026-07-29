@@ -1,5 +1,5 @@
 [project]
-name = "flights-api"
+name = "overhead"
 version = "0.1.0"
 description = "Selfhostable FastAPI service aggregating commercial flight data"
 authors = [
