@@ -1,0 +1,26 @@
+[project]
+name = "flights-api"
+version = "0.1.0"
+description = "Selfhostable FastAPI service aggregating commercial flight data"
+authors = [
+    { name = "Mithun B", email = "24193159+mithunb9@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.140.13",
+    "redis>=8.0.1",
+    "uvicorn[standard]>=0.51.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.11,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
