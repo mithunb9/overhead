@@ -1,6 +1,6 @@
 # flights-api
 
-A selfhostable API built in FastAPI and Python to aggregate commercial flight data for use across my projects. Primarily built for [FlightMatrix](https://www.github.com/FlightMatrix).
+A selfhostable API built in FastAPI and Python to aggregate commercial flight data for use across my projects. Primarily built for [FlightMatrix](https://www.github.com/mithunb9/FlightMatrix).
 
 Use Docker Compose or the built in Render config for easy deployment.
 
