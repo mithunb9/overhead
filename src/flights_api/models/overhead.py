@@ -1,11 +1,24 @@
 from pydantic import BaseModel
 
 
+class OverheadRequest(BaseModel):
+    lat: float
+    lon: float
+
+
 class OverheadResponse(BaseModel):
-    """Response for the /overhead endpoint.
-
-    Stub for now — will carry the nearest overhead flight(s) once ADS-B
-    lookups land (see README milestones).
-    """
-
-    message: str
+    flight: str
+    callsign: str
+    airline: str | None = None
+    airline_icao: str | None = None
+    reg: str | None = None
+    actype: str | None = None
+    origin: str | None = None
+    origin_city: str | None = None
+    dest: str | None = None
+    dest_city: str | None = None
+    alt_ft: int
+    speed_kt: float | None = None
+    dist_mi: float
+    source: str = "adsb.lol"
+    age_s: float
