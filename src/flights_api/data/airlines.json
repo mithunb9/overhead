@@ -1,0 +1,17 @@
+{
+  "AAL": { "name": "American Airlines", "iata": "AA" },
+  "DAL": { "name": "Delta Air Lines", "iata": "DL" },
+  "UAL": { "name": "United Airlines", "iata": "UA" },
+  "SWA": { "name": "Southwest Airlines", "iata": "WN" },
+  "ASA": { "name": "Alaska Airlines", "iata": "AS" },
+  "JBU": { "name": "JetBlue Airways", "iata": "B6" },
+  "FFT": { "name": "Frontier Airlines", "iata": "F9" },
+  "NKS": { "name": "Spirit Airlines", "iata": "NK" },
+  "ENY": { "name": "Envoy Air", "iata": "MQ" },
+  "SKW": { "name": "SkyWest Airlines", "iata": "OO" },
+  "RPA": { "name": "Republic Airways", "iata": "YX" },
+  "EDV": { "name": "Endeavor Air", "iata": "9E" },
+  "AAY": { "name": "Allegiant Air", "iata": "G4" },
+  "HAL": { "name": "Hawaiian Airlines", "iata": "HA" },
+  "PDT": { "name": "Piedmont Airlines", "iata": "PT" }
+}
