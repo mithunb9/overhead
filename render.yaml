@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: flights-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: flights-api-cache
+          property: connectionString
+
+  - type: keyvalue
+    name: flights-api-cache
+    plan: free
+    ipAllowList: []
