@@ -12,6 +12,7 @@ DEFAULT_CONFIG_PATH = "config.yaml"
 
 class OverheadConfig(BaseModel):
     radius_nm: float = 5
+    count_max: int = 10
 
 
 class CacheConfig(BaseModel):

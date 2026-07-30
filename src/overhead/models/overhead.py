@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class OverheadRequest(BaseModel):
     lat: float
     lon: float
+    count: int = 1
 
 
 class OverheadResponse(BaseModel):
