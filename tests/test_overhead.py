@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 from overhead.config import settings
 from overhead.main import app
-from overhead.models.overhead import OverheadResponse
+from overhead.models.overhead import OverheadRequest, OverheadResponse
 
 client = TestClient(app)
 
@@ -129,7 +129,10 @@ def test_overhead_clamps_count_to_configured_max(mock_clients: tuple[AsyncMock, 
     with patch.object(settings.overhead, "count_max", 1):
         response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41, "count": 5})
 
-    assert len(response.json()) == 1
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body) == 1
+    assert body[0]["callsign"] == "AAL2847"
 
 
 def test_overhead_returns_partial_list_when_fewer_aircraft_than_count(
@@ -141,6 +144,7 @@ def test_overhead_returns_partial_list_when_fewer_aircraft_than_count(
 
     response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41, "count": 5})
 
+    assert response.status_code == 200
     assert len(response.json()) == 1
 
 
@@ -187,6 +191,12 @@ def test_overhead_requires_lat_lon() -> None:
     response = client.post("/overhead", json={})
 
     assert response.status_code == 422
+
+
+def test_overhead_request_defaults_count_to_one() -> None:
+    request = OverheadRequest(lat=33.94, lon=-118.41)
+
+    assert request.count == 1
 
 
 def test_overhead_rejects_get() -> None:
