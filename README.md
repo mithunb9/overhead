@@ -12,7 +12,7 @@ v0.1.5 - repository CI/CD and github container repository regristation. ✅
 
 v0.2 - `POST /overhead` with amount returns a list of the nearest commercial flights up to the amount, clamped by configurable values. ✅
 
-v0.3 - configurable route enrichment source, free community data or a paid provider (e.g. AeroAPI), user's choice via config.
+v0.3 - configurable route enrichment source, free community data or a paid provider (e.g. AeroAPI), user's choice via config. ✅
 
 v0.4 - airline logos and operating/marketing carrier reconciliation (e.g. ENY flights operate as American Eagle for American) config flag.
 
