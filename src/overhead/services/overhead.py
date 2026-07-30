@@ -28,10 +28,8 @@ def filter_commercial_airborne(aircraft: list[dict[str, Any]]) -> list[dict[str,
     return filtered
 
 
-def pick_nearest(aircraft: list[dict[str, Any]]) -> dict[str, Any] | None:
-    if not aircraft:
-        return None
-    return min(aircraft, key=lambda ac: ac["dst"])
+def pick_nearest_n(aircraft: list[dict[str, Any]], n: int) -> list[dict[str, Any]]:
+    return sorted(aircraft, key=lambda ac: ac["dst"])[:n]
 
 
 def _resolve_airline(

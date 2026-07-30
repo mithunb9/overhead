@@ -1,8 +1,9 @@
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
 
+from overhead.config import settings
 from overhead.main import app
 from overhead.models.overhead import OverheadResponse
 
@@ -83,25 +84,64 @@ def test_overhead_returns_nearest_commercial_flight(mock_clients: tuple[AsyncMoc
 
     assert response.status_code == 200
     body = response.json()
-    assert body == {
-        "flight": "AA2847",
-        "callsign": "AAL2847",
-        "airline": "American Airlines",
-        "airline_icao": "AAL",
-        "reg": "N832AA",
-        "actype": "B738",
-        "origin": "DFW",
-        "origin_city": "Dallas-Fort Worth",
-        "dest": "ORD",
-        "dest_city": "Chicago",
-        "alt_ft": 32000,
-        "speed_kt": 447.0,
-        "dist_mi": pytest.approx(3.65 * 1.15078),
-        "source": "adsb.lol",
-        "age_s": 3,
-    }
+    assert body == [
+        {
+            "flight": "AA2847",
+            "callsign": "AAL2847",
+            "airline": "American Airlines",
+            "airline_icao": "AAL",
+            "reg": "N832AA",
+            "actype": "B738",
+            "origin": "DFW",
+            "origin_city": "Dallas-Fort Worth",
+            "dest": "ORD",
+            "dest_city": "Chicago",
+            "alt_ft": 32000,
+            "speed_kt": 447.0,
+            "dist_mi": pytest.approx(3.65 * 1.15078),
+            "source": "adsb.lol",
+            "age_s": 3,
+        }
+    ]
     fetch_route.assert_awaited_once()
     assert fetch_route.await_args.args[0] == "AAL2847"
+
+
+def test_overhead_returns_requested_count_sorted_nearest_first(
+    mock_clients: tuple[AsyncMock, AsyncMock],
+) -> None:
+    fetch_nearby, fetch_route = mock_clients
+    fetch_nearby.return_value = [FARTHER_AC, NEAREST_AC]
+    fetch_route.return_value = None
+
+    response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41, "count": 2})
+
+    body = response.json()
+    assert [flight["callsign"] for flight in body] == ["AAL2847", "DAL100"]
+    assert body[0]["dist_mi"] < body[1]["dist_mi"]
+
+
+def test_overhead_clamps_count_to_configured_max(mock_clients: tuple[AsyncMock, AsyncMock]) -> None:
+    fetch_nearby, fetch_route = mock_clients
+    fetch_nearby.return_value = [NEAREST_AC, FARTHER_AC]
+    fetch_route.return_value = None
+
+    with patch.object(settings.overhead, "count_max", 1):
+        response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41, "count": 5})
+
+    assert len(response.json()) == 1
+
+
+def test_overhead_returns_partial_list_when_fewer_aircraft_than_count(
+    mock_clients: tuple[AsyncMock, AsyncMock],
+) -> None:
+    fetch_nearby, fetch_route = mock_clients
+    fetch_nearby.return_value = [NEAREST_AC]
+    fetch_route.return_value = None
+
+    response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41, "count": 5})
+
+    assert len(response.json()) == 1
 
 
 def test_overhead_falls_back_to_static_airline_table_when_route_unknown(
@@ -113,7 +153,7 @@ def test_overhead_falls_back_to_static_airline_table_when_route_unknown(
 
     response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41})
 
-    body = response.json()
+    body = response.json()[0]
     assert body["airline"] == "American Airlines"
     assert body["airline_icao"] == "AAL"
     assert body["flight"] == "AA2847"
@@ -121,7 +161,7 @@ def test_overhead_falls_back_to_static_airline_table_when_route_unknown(
     assert body["dest"] is None
 
 
-def test_overhead_returns_200_and_null_when_nothing_overhead(
+def test_overhead_returns_200_and_empty_list_when_nothing_overhead(
     mock_clients: tuple[AsyncMock, AsyncMock],
 ) -> None:
     fetch_nearby, _ = mock_clients
@@ -130,7 +170,7 @@ def test_overhead_returns_200_and_null_when_nothing_overhead(
     response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41})
 
     assert response.status_code == 200
-    assert response.json() is None
+    assert response.json() == []
 
 
 def test_overhead_response_matches_model(mock_clients: tuple[AsyncMock, AsyncMock]) -> None:
@@ -140,7 +180,7 @@ def test_overhead_response_matches_model(mock_clients: tuple[AsyncMock, AsyncMoc
 
     response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41})
 
-    assert OverheadResponse.model_validate(response.json())
+    assert all(OverheadResponse.model_validate(flight) for flight in response.json())
 
 
 def test_overhead_requires_lat_lon() -> None:

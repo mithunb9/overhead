@@ -1,4 +1,4 @@
-from overhead.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest
+from overhead.services.overhead import build_overhead_response, filter_commercial_airborne, pick_nearest_n
 
 GROUND_AC = {"flight": "UAL2681 ", "alt_baro": "ground", "seen_pos": 1.0, "dst": 1.0}
 GA_AC = {"flight": "N828KP  ", "alt_baro": 900, "seen_pos": 0.5, "dst": 2.0}
@@ -27,12 +27,20 @@ def test_filter_commercial_airborne_keeps_position_exactly_at_staleness_threshol
     assert result == [ac]
 
 
-def test_pick_nearest_returns_smallest_dst() -> None:
-    assert pick_nearest([FAR_AC, NEAR_AC]) == NEAR_AC
+def test_pick_nearest_n_sorts_ascending_by_dst() -> None:
+    assert pick_nearest_n([FAR_AC, NEAR_AC], 2) == [NEAR_AC, FAR_AC]
 
 
-def test_pick_nearest_returns_none_for_empty_list() -> None:
-    assert pick_nearest([]) is None
+def test_pick_nearest_n_truncates_to_n() -> None:
+    assert pick_nearest_n([FAR_AC, NEAR_AC], 1) == [NEAR_AC]
+
+
+def test_pick_nearest_n_returns_partial_list_when_fewer_than_n_available() -> None:
+    assert pick_nearest_n([NEAR_AC], 5) == [NEAR_AC]
+
+
+def test_pick_nearest_n_returns_empty_list_for_empty_input() -> None:
+    assert pick_nearest_n([], 5) == []
 
 
 def test_build_overhead_response_uses_adsbdb_route_when_available() -> None:
