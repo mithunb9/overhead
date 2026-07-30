@@ -56,7 +56,7 @@ async def test_fetch_flight_route_cache_hit_skips_http_call(stub_redis: AsyncMoc
         route = await fetch_flight_route("AAL2847", client)
 
     assert route == cached
-    stub_redis.get.assert_awaited_once_with("route:AAL2847")
+    stub_redis.get.assert_awaited_once_with("route:adsbdb:AAL2847")
 
 
 @pytest.mark.anyio
@@ -73,7 +73,7 @@ async def test_fetch_flight_route_cache_miss_calls_api_and_populates_cache(
 
     assert route == {"callsign": "AAL2847"}
     stub_redis.set.assert_awaited_once_with(
-        "route:AAL2847", json.dumps(route), ex=settings.cache.origin_dest_ttl_s
+        "route:adsbdb:AAL2847", json.dumps(route), ex=settings.cache.origin_dest_ttl_s
     )
 
 
@@ -87,7 +87,7 @@ async def test_fetch_flight_route_caches_unknown_callsign_result(stub_redis: Asy
 
     assert route is None
     stub_redis.set.assert_awaited_once_with(
-        "route:ZZZ9999", json.dumps(None), ex=settings.cache.origin_dest_ttl_s
+        "route:adsbdb:ZZZ9999", json.dumps(None), ex=settings.cache.origin_dest_ttl_s
     )
 
 

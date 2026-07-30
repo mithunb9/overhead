@@ -22,4 +22,6 @@ async def fetch_flight_route(callsign: str, client: httpx.AsyncClient) -> dict[s
 
         return response.json().get("response", {}).get("flightroute")
 
-    return await cached_call(f"route:{callsign}", settings.cache.origin_dest_ttl_s, fetch)
+    # key is namespaced per provider so switching route_source can't serve an old
+    # provider's cached entry mislabeled with the new provider's name.
+    return await cached_call(f"route:adsbdb:{callsign}", settings.cache.origin_dest_ttl_s, fetch)

@@ -35,7 +35,7 @@ def pick_nearest_n(aircraft: list[dict[str, Any]], n: int) -> list[dict[str, Any
 def _resolve_airline(
     icao_prefix: str, route: dict[str, Any] | None, airlines: dict[str, AirlineEntry]
 ) -> tuple[str | None, str | None, str | None]:
-    """Returns (name, icao, iata), preferring adsbdb's route lookup over the bundled table."""
+    """Returns (name, icao, iata), preferring the route lookup over the bundled table."""
     if route and route.get("airline"):
         airline = route["airline"]
         return airline.get("name"), airline.get("icao"), airline.get("iata")
@@ -48,7 +48,10 @@ def _resolve_airline(
 
 
 def build_overhead_response(
-    aircraft: dict[str, Any], route: dict[str, Any] | None, airlines: dict[str, AirlineEntry]
+    aircraft: dict[str, Any],
+    route: dict[str, Any] | None,
+    airlines: dict[str, AirlineEntry],
+    route_source: str | None = None,
 ) -> OverheadResponse:
     callsign = aircraft["flight"].strip()
     icao_prefix, numeric_part = callsign[:3], callsign[3:]
@@ -74,5 +77,6 @@ def build_overhead_response(
         speed_kt=aircraft.get("gs"),
         dist_mi=aircraft["dst"] * NM_TO_MI,
         source="adsb.lol",
+        route_source=route_source,
         age_s=aircraft["seen_pos"],
     )
