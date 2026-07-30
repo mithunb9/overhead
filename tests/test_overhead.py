@@ -189,6 +189,37 @@ def test_overhead_response_matches_model(mock_clients: tuple[AsyncMock, AsyncMoc
     assert all(OverheadResponse.model_validate(flight) for flight in response.json())
 
 
+def test_overhead_dispatches_to_configured_route_source(
+    mock_clients: tuple[AsyncMock, AsyncMock], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fetch_nearby, _ = mock_clients
+    fetch_nearby.return_value = [NEAREST_AC]
+    fetch_aeroapi = AsyncMock(return_value=ROUTE_RESPONSE)
+    fetch_adsbdb = AsyncMock(return_value=ROUTE_RESPONSE)
+    monkeypatch.setitem(ROUTE_PROVIDERS, "aeroapi", fetch_aeroapi)
+    monkeypatch.setitem(ROUTE_PROVIDERS, "adsbdb", fetch_adsbdb)
+
+    with patch.object(settings.overhead, "route_source", "aeroapi"):
+        response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41})
+
+    assert response.status_code == 200
+    assert response.json()[0]["route_source"] == "aeroapi"
+    fetch_aeroapi.assert_awaited_once()
+    fetch_adsbdb.assert_not_awaited()
+
+
+def test_overhead_route_source_is_none_when_no_route_found(
+    mock_clients: tuple[AsyncMock, AsyncMock],
+) -> None:
+    fetch_nearby, fetch_route = mock_clients
+    fetch_nearby.return_value = [NEAREST_AC]
+    fetch_route.return_value = None
+
+    response = client.post("/overhead", json={"lat": 33.94, "lon": -118.41})
+
+    assert response.json()[0]["route_source"] is None
+
+
 def test_overhead_requires_lat_lon() -> None:
     response = client.post("/overhead", json={})
 
