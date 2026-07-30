@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
+from overhead.clients import ROUTE_PROVIDERS
 from overhead.config import settings
 from overhead.main import app
 from overhead.models.overhead import OverheadRequest, OverheadResponse
@@ -71,7 +72,7 @@ def mock_clients(monkeypatch: pytest.MonkeyPatch) -> tuple[AsyncMock, AsyncMock]
     fetch_nearby = AsyncMock(return_value=[])
     fetch_route = AsyncMock(return_value=None)
     monkeypatch.setattr("overhead.api.routes.overhead.fetch_nearby_aircraft", fetch_nearby)
-    monkeypatch.setattr("overhead.api.routes.overhead.fetch_flight_route", fetch_route)
+    monkeypatch.setitem(ROUTE_PROVIDERS, "adsbdb", fetch_route)
     return fetch_nearby, fetch_route
 
 
@@ -100,6 +101,7 @@ def test_overhead_returns_nearest_commercial_flight(mock_clients: tuple[AsyncMoc
             "speed_kt": 447.0,
             "dist_mi": pytest.approx(3.65 * 1.15078),
             "source": "adsb.lol",
+            "route_source": "adsbdb",
             "age_s": 3,
         }
     ]

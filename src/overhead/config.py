@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel
@@ -13,6 +14,7 @@ DEFAULT_CONFIG_PATH = "config.yaml"
 class OverheadConfig(BaseModel):
     radius_nm: float = 5
     count_max: int = 10
+    route_source: Literal["adsbdb", "aeroapi"] = "adsbdb"
 
 
 class CacheConfig(BaseModel):

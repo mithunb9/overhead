@@ -22,4 +22,5 @@ class OverheadResponse(BaseModel):
     speed_kt: float | None = None
     dist_mi: float
     source: str = "adsb.lol"
+    route_source: str | None = None
     age_s: float

@@ -1,8 +1,8 @@
 import httpx
 from fastapi import APIRouter
 
+from overhead.clients import ROUTE_PROVIDERS
 from overhead.clients.adsb_lol import fetch_nearby_aircraft
-from overhead.clients.adsbdb import fetch_flight_route
 from overhead.config import settings
 from overhead.data.airlines import load_airlines
 from overhead.models.overhead import OverheadRequest, OverheadResponse
@@ -23,9 +23,11 @@ async def get_overhead(request: OverheadRequest) -> list[OverheadResponse]:
         nearest = pick_nearest_n(filter_commercial_airborne(aircraft), count)
 
         airlines = load_airlines()
+        fetch = ROUTE_PROVIDERS[settings.overhead.route_source]
         responses = []
         for ac in nearest:
-            route = await fetch_flight_route(ac["flight"].strip(), client)
-            responses.append(build_overhead_response(ac, route, airlines))
+            route = await fetch(ac["flight"].strip(), client)
+            route_source = settings.overhead.route_source if route else None
+            responses.append(build_overhead_response(ac, route, airlines, route_source))
 
     return responses
