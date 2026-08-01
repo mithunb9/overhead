@@ -16,8 +16,6 @@ v0.3 - configurable route enrichment source, free community data or a paid provi
 
 v0.4 - airline logos and operating/marketing carrier reconciliation (e.g. ENY flights operate as American Eagle for American) config flag.
 
-v0.5 - Additional location discriminators like city, zip code and airport.
-
 ## 3. Data Sources
 
 ADS-B broadcasts give position, altitude, callsign, and ICAO hex. The base data provided by them will be enriched.
